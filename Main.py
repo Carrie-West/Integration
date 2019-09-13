@@ -1,7 +1,12 @@
-#Carrie West
-#A Choose-Your-Own-Adventure Game
+# Carrie West
+# A Choose-Your-Own-Adventure Game
+import threading
+import Main
+from Commands import gameover
 
+inventory=[]
 name=input("Hello! Before we start, what is your name?")
+# Getting the user's pronouns for usage in in-game dialogue/descriptions
 heHim=["he", "him", "his"]
 sheHer=["she", "her", "her's"]
 theyThem=["they", "them', their's"]
@@ -26,4 +31,11 @@ elif pronounSet == "Other":
         print(otherPronouns)
         acceptedPronouns=input("Are these pronouns correct? (Y/N)")
         pronounSet=otherPronouns
-print(pronounSet)
+
+t = threading.Timer(3600.0, gameover)
+run=input("Ready to begin, " + name + "? (Y/N))")
+if run == "Y":
+    t.start()
+    collect("book")
+    print(inventory)
+
