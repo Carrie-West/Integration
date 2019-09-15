@@ -1,18 +1,27 @@
 # Carrie West
 # A Choose-Your-Own-Adventure Game
 import threading
-import Main
-from Commands import gameover
 
-inventory=[]
-name=input("Hello! Before we start, what is your name?")
+
+# from Commands import collect, gameover #Need help figuring out import in PyCharm
+
+def gameover():
+    print("You have failed")
+
+
+def collect(item):
+    inventory.append(item)
+
+
+inventory = []
+name = input("Hello! Before we start, what is your name?")
 # Getting the user's pronouns for usage in in-game dialogue/descriptions
-heHim=["he", "him", "his"]
-sheHer=["she", "her", "her's"]
-theyThem=["they", "them', their's"]
-otherPronouns=[]
-acceptedPronouns="N"
-pronounSet=input("What pronouns do you use? (He,She,They,Other)")
+heHim = ["he", "him", "his"]
+sheHer = ["she", "her", "her's"]
+theyThem = ["they", "them', their's"]
+otherPronouns = []
+acceptedPronouns = "N"
+pronounSet = input("What pronouns do you use? (He,She,They,Other)")
 if pronounSet == "He":
     pronounSet = heHim
 elif pronounSet == "She":
@@ -22,20 +31,23 @@ elif pronounSet == "They":
 elif pronounSet == "Other":
     print("Awesome! You're valid.")
     while acceptedPronouns != "Y":
-        otherPronounsOne=input("What should others use to refer to you? (ex: 'he' or 'she') ")
+        otherPronounsOne = input("What should others use to refer to you? (ex: 'he' or 'she') ")
         otherPronouns.append(otherPronounsOne)
         otherPronounsTwo = input("What should others use to refer to you? (ex: 'her' or 'them')")
         otherPronouns.append(otherPronounsTwo)
         otherPronounsThree = input("What should others use to refer to your possessions? (ex: 'their's' or 'his')")
         otherPronouns.append(otherPronounsThree)
         print(otherPronouns)
-        acceptedPronouns=input("Are these pronouns correct? (Y/N)")
-        pronounSet=otherPronouns
+        acceptedPronouns = input("Are these pronouns correct? (Y/N)")
+        pronounSet = otherPronouns
 
-t = threading.Timer(3600.0, gameover)
-run=input("Ready to begin, " + name + "? (Y/N))")
+run = input("Ready to begin, " + name + "? (Y/N))")
 if run == "Y":
+    t = threading.Timer(3600.0, gameover)
     t.start()
-    collect("book")
-    print(inventory)
-
+    command = input("What are you going to do?")
+    if command == "collect book":
+        collect("book")
+        print(inventory)
+    elif command == "crash":
+        t = threading.Timer(1.0, gameover())
