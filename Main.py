@@ -70,7 +70,7 @@ while time.monotonic() < t_end:
     if command == "look around cabin" or command == "LOOK AROUND CABIN" or command == "Look Around Cabin":
         print(
             "You peek up over the seat in front of you, apparently missing the whimsical sound of your fellow "
-            "passenger's ""hacking cough. "
+            "passenger's hacking cough. "
             "\n'They must be in the bathroom', you think. "
             "\nBut wait. Wasn't there someone in the seat next to them? (GET UP or STAY PUT)")
         command = ""
