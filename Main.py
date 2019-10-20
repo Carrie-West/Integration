@@ -29,12 +29,13 @@ name = input("Hello! Before we start, what is your name?")
 inventory = []
 area = ""
 knockCount = 0
-heHim = ["he", "him", "his"]  # Getting the user's pronouns for usage in in-game dialogue/descriptions
-sheHer = ["she", "her", "her's"]
-theyThem = ["they", "them', their's"]
+pilotPath = "N"
+heHim = ["he", "him", "his", "is"]  # Getting the user's pronouns for usage in in-game dialogue/descriptions
+sheHer = ["she", "her", "her's", "is"]
+theyThem = ["they", "them', their's", "are"]
 otherPronouns = []
 acceptedPronouns = "N"
-pronounSet = input("What pronouns do you use? (He,She,They,Other)")
+pronounSet = input("What pronouns do you use? (He,She,They,Other, Just Use My Name)")
 if pronounSet == "He":
     pronounSet = heHim
 elif pronounSet == "She":
@@ -50,13 +51,21 @@ elif pronounSet == "Other":
         otherPronouns.append(otherPronounsTwo)
         otherPronounsThree = input("What should others use to refer to your possessions? (ex: 'their's' or 'his')")
         otherPronouns.append(otherPronounsThree)
+        isOrAre = input("Do these pronouns work with is, or are? (ex. 'They are' or 'She is')")
         print(otherPronouns)
         acceptedPronouns = input("Are these pronouns correct? (Y/N)")
+        otherPronouns.append(isOrAre)
         pronounSet = otherPronouns
+elif pronounSet == "Just Use My Name":
+   otherPronounsOne = name
+   otherPronouns.append(otherPronounsOne)
+   otherPronounsTwo = name + "'s"
+   otherPronouns.append(otherPronounsTwo)
+   pronounSet = otherPronouns
 # player is in coach, create NPC in first class that judges them for it
 run = "N"
 subRun = "N"
-dialogue= "N"
+dialogue = "N"
 while run != "Y":
     run = input("Ready to begin, " + name + "? (Y/N))")
     if run == "Y":
@@ -70,7 +79,7 @@ print(t_end)
 while time.monotonic() < t_end:
     print(time.monotonic())
     command = input("What are you going to do?")
-    if command == "look around cabin" or command == "LOOK AROUND CABIN" or command == "Look Around Cabin":
+    if command == "LOOK AROUND CABIN":
         print(
             "You peek up over the seat in front of you, apparently missing the whimsical sound of your fellow "
             "passenger's hacking cough. "
@@ -80,11 +89,12 @@ while time.monotonic() < t_end:
         subRun = "Y"
         while subRun == "Y":
             command = input("What are you going to do?")
-            if command == "stay put" or command == "STAY PUT" or command == "Stay Put":
+            if command == "STAY PUT":
+                location = "seat"
                 print("You're right, you're probably just imagining things.")
                 subRun = "N"
                 # separating the branches from one another.
-            elif command == "get up" or command == "GET UP" or command == "Get Up":
+            elif command == "GET UP":
                 print("There is no way you are imagining things. Worst case, you can use the bathroom. "
                       "\n'Maybe that's where they are' you think to yourself. "
                       "\n Hm, apparently not. There is no one here, or anywhere in Coach as far as you can see.")
@@ -92,7 +102,7 @@ while time.monotonic() < t_end:
             else:
                 command = ""
                 print("You cannot do that right now.")
-    elif command == "go bathroom" or command == "GO BATHROOM" or command == "Go Bathroom":
+    elif command == "GO BATHROOM":
         area = "bathroom"
         print("You've had too many drinks to think about anything but sweet release."
               "\nYou move to the back of Coach, still unnerved by the absence of your fellow passengers "
@@ -103,10 +113,10 @@ while time.monotonic() < t_end:
         subRun = "Y"
         while subRun == "Y":
             command = input("What are you going to do?")
-            if command == "knock" or command == "KNOCK" or command == "Knock" and knockCount <= 5:
+            if command == "KNOCK" and knockCount <= 5:
                 print("'Please go away', you hear in between sobs from behind the thin plastic door.")
                 knockCount += 1
-            elif command == "speak" or command == "SPEAK" or command == "Speak":
+            elif command == "SPEAK":
                 dialogue = "Y"
                 while dialogue == "Y":
                     speech = input("It's usually rude to speak to strangers while they are in the bathroom, but go on "
@@ -117,14 +127,28 @@ while time.monotonic() < t_end:
                     if speech == "LIE":
                         print("Ah, wow, a brilliant and morally correct move. You stammer for a lie. 'I'm the captain',"
                               "you say, putting on your best impression of a pilot")
-                        print("'You don't really sound like the captain.")
-
-            if (command == "knock" or command == "KNOCK" or command == "Knock") and knockCount >= 5:
+                        print("'You don't really sound like the captain.'")
+                        speech =input("Uh oh, doesn't sound convinced. (COME CLEAN or LIE MORE)")
+                        if speech == "LIE MORE":
+                            pilotPath = "Y"
+                            print("You really truly insist that you are the pilot, mentioning times of bravery and"
+                                  "aviation excellence. You take hold of your role and you truly become the pilot")
+                            print("The door opens, a woman dressed in a steward outfit looks at you."
+                                  "\n 'Why aren't you wearing your uniform?', she looks incredibly puzzled."
+                                  "You, being the excellent liar you are, say you just sort of woke up like this.")
+                            print(" 'Is the co-pilot here?' ")
+                            print("Her name tag reads Holly. She is now following you around.")
+                            dialogue = "N"
+            if command == "KNOCK"  and knockCount >= 5:
                 print("The door slams open. You catch the brief glimpse of a stewardess. You drop to the ground as "
                       "she screams 'BEGONE, DEMON!'. The last thing you remember is the smell of stale peanuts. ")
                 t_end = time.monotonic()
                 subRun = "N"
-    elif command == "sleep" or command == "SLEEP" or command == "Sleep":
+    elif command == "LOOK AROUND" and location == "seat":
+        command = input("Same as how you left it when you zonked out. The SAFETY MANUAL and the In-Flight MAGAZINE sit "
+                        "in the pouch in front of you. The call assistance button lies above your head. Press it? (Y/N)")
+
+    elif command == "SLEEP":
         print("Hm, still up in the air. Yeah, back to your nap.")
         t_end = time.monotonic()
     elif command == "COLLECTION":
