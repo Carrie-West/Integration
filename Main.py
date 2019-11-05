@@ -1,7 +1,10 @@
 """ Carrie West
  A Choose-Your-Own-Adventure Game"""
-
+import random
 import time
+
+import NPCs
+
 
 
 def gameOver():
@@ -16,17 +19,29 @@ def collection():
     print(inventory)
 
 
+def location():
+    print(area)
+
+def group():
+    if "Holly" in party:
+        print(holly.name)
+        print("Mood:",holly.mood)
+        print("Opinion", holly.opinion)
+
 def commands():
     print("HELP: Display the commands list"
           "\nGO (area): Move to the inputted area"
           "\nLOOK AROUND: Look around your current area"
           "\nCOLLECT (item): Add an item to your collection."
           "\nCOLLECTION: Take a look at your collection."
-          "\nSEARCH (area): Take a thorough search of a specific place")
+          "\nSEARCH (area): Take a thorough search of a specific place"
+          "\nLOCATION: Gives you the name of your current location."
+          "\nPARTY: Gives you a look at your current party and their status")
 
 
 name = input("Hello! Before we start, what is your name?")
 inventory = []
+party= []
 area = ""
 knockCount = 0
 pilotPath = "N"
@@ -57,11 +72,11 @@ elif pronounSet == "Other":
         otherPronouns.append(isOrAre)
         pronounSet = otherPronouns
 elif pronounSet == "Just Use My Name":
-   otherPronounsOne = name
-   otherPronouns.append(otherPronounsOne)
-   otherPronounsTwo = name + "'s"
-   otherPronouns.append(otherPronounsTwo)
-   pronounSet = otherPronouns
+    otherPronounsOne = name
+    otherPronouns.append(otherPronounsOne)
+    otherPronounsTwo = name + "'s"
+    otherPronouns.append(otherPronounsTwo)
+    pronounSet = otherPronouns
 # player is in coach, create NPC in first class that judges them for it
 run = "N"
 subRun = "N"
@@ -90,7 +105,7 @@ while time.monotonic() < t_end:
         while subRun == "Y":
             command = input("What are you going to do?")
             if command == "STAY PUT":
-                location = "seat"
+                area = "seat"
                 print("You're right, you're probably just imagining things.")
                 subRun = "N"
                 # separating the branches from one another.
@@ -123,13 +138,47 @@ while time.monotonic() < t_end:
                                    "ahead \n 'Who are you?', you hear in a meek and muffled voice.(ANSWER HONESTLY OR "
                                    "LIE)")
                     if speech == "ANSWER HONESTLY":
-                        print("'A passenger? But you all...'")
+                        print("'A passenger? But you all...', the voice trails off."
+                              "\nThe door unlocks and out comes a stewardess. The marks of dried tears run down her"
+                              "cheeks. "
+                              "\n 'Come with me and let's find out what's going on here."
+                              "\n You aren't going to get to use the bathroom, are you?")
+                        holly = NPCs.NPC("Holly", "shaken", 60)
+                        party.append("Holly")
+                        holly.mood = "Emboldened"
+                        holly.opinion = 85 - knockCount
+                        dialogue = "N"
                     if speech == "LIE":
                         print("Ah, wow, a brilliant and morally correct move. You stammer for a lie. 'I'm the captain',"
                               "you say, putting on your best impression of a pilot")
                         print("'You don't really sound like the captain.'")
-                        speech =input("Uh oh, doesn't sound convinced. (COME CLEAN or LIE MORE)")
-                        if speech == "LIE MORE":
+                        lieSuccess = random.randint(0, 100)
+                        print(lieSuccess)
+                        speech = input("Uh oh, doesn't sound convinced. (COME CLEAN or LIE MORE)")
+                        if speech == "COME CLEAN":
+                            print("You can't keep doing this. You answer honestly about your lack of flying ability"
+                                  "\n All you hear now is breathing."
+                                  "\n..."
+                                  "\n A deep sigh is heard as the door unlocks. Before you stands a stewardess, "
+                                  "the marks of dried tears running down her cheeks."
+                                  "\n'Come on now, let's sort this all out'.")
+                            holly = NPCs.NPC("Holly", "shaken", 60)
+                            party.append("Holly")
+                            holly.mood = "Exhausted"
+                            holly.opinion = 48 - knockCount
+                            dialogue="N"
+                        if speech == "LIE MORE" and lieSuccess <90:
+                            print("You try your best to mimic Top Gun, telling the story of your best friend Goose and"
+                                  "an incredibly long volleyball montage, you're just getting to the climax-"
+                                  "\n 'Please just stop!', a muffled cry from behind the door. It unlocks, revealing"
+                                  "a tired and incredibly annoyed stewardess. "
+                                  "\n 'Just come along with me, if you are here then *someone* else must be here. ")
+                            holly = NPCs.NPC("Holly", "shaken", 60)
+                            party.append("Holly")
+                            holly.mood = "P.O."
+                            holly.opinion = 30 - knockCount
+                            dialogue = "N"
+                        if speech == "LIE MORE" and lieSuccess >= 90:
                             pilotPath = "Y"
                             print("You really truly insist that you are the pilot, mentioning times of bravery and"
                                   "aviation excellence. You take hold of your role and you truly become the pilot")
@@ -138,8 +187,13 @@ while time.monotonic() < t_end:
                                   "You, being the excellent liar you are, say you just sort of woke up like this.")
                             print(" 'Is the co-pilot here?' ")
                             print("Her name tag reads Holly. She is now following you around.")
+                            holly = NPCs.NPC("Holly", "shaken", 60)
+                            party.append("Holly")
+                            holly.mood = "Relieved"
+                            holly.opinion = 75 - knockCount
                             dialogue = "N"
-            if command == "KNOCK"  and knockCount >= 5:
+                subRun = "N"
+            if command == "KNOCK" and knockCount >= 5:
                 print("The door slams open. You catch the brief glimpse of a stewardess. You drop to the ground as "
                       "she screams 'BEGONE, DEMON!'. The last thing you remember is the smell of stale peanuts. ")
                 t_end = time.monotonic()
@@ -147,7 +201,6 @@ while time.monotonic() < t_end:
     elif command == "LOOK AROUND" and location == "seat":
         command = input("Same as how you left it when you zonked out. The SAFETY MANUAL and the In-Flight MAGAZINE sit "
                         "in the pouch in front of you. The call assistance button lies above your head. Press it? (Y/N)")
-
     elif command == "SLEEP":
         print("Hm, still up in the air. Yeah, back to your nap.")
         t_end = time.monotonic()
@@ -155,7 +208,12 @@ while time.monotonic() < t_end:
         collection()
     elif command == "HELP":
         commands()
+    elif command == "LOCATION":
+        location()
+    elif command == "PARTY":
+        group()
     else:
         command = ""
         print("You cannot do that right now.")
 gameOver()
+
