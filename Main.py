@@ -404,7 +404,7 @@ while time.monotonic() < t_end:  # Main Loop Begins
                                     louis = NPCs.NPC("Louis", "Appeased", 75)
                                     print("He takes a moment."
                                           "\n 'Hm, alright. I suppose these"
-                                          " are stressful times. It is nice"
+                                          " are stressful times. It is nice "
                                           "to see other people are still here"
                                           ". Mind if I tag along?' "
                                           "\nYou feel too embarrassed to say "
